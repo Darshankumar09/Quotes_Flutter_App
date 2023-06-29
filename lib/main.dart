@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:quotes_app/views/screens/category_page.dart';
 import 'package:quotes_app/views/screens/home_page.dart';
+import 'package:quotes_app/views/screens/quote_details_page.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
+
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -16,6 +21,14 @@ void main() {
         GetPage(
           name: "/",
           page: () => const HomePage(),
+        ),
+        GetPage(
+          name: "/categoryPage",
+          page: () => const CategoryPage(),
+        ),
+        GetPage(
+          name: "/quoteDetailsPage",
+          page: () => const QuoteDetailsPage(),
         ),
       ],
     ),
