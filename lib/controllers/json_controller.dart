@@ -8,7 +8,7 @@ class JsonController extends GetxController {
   LocalJsonModel localJsonModel = LocalJsonModel(jsonData: "", categories: []);
 
   Future<List<CategoryModel>> localJsonDecode() async {
-    String path = "lib/utils/resources/json/quotes.json";
+    String path = "lib/resources/json/quotes.json";
     localJsonModel.jsonData = await rootBundle.loadString(path);
 
     List decodedList = jsonDecode(localJsonModel.jsonData);

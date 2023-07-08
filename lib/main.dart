@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:quotes_app/views/screens/category_page.dart';
+import 'package:quotes_app/views/screens/favorite_page.dart';
 import 'package:quotes_app/views/screens/home_page.dart';
 import 'package:quotes_app/views/screens/quote_details_page.dart';
+import 'package:quotes_app/views/screens/theme_page.dart';
 
 void main() async {
   await GetStorage.init();
@@ -29,6 +31,14 @@ void main() async {
         GetPage(
           name: "/quoteDetailsPage",
           page: () => const QuoteDetailsPage(),
+        ),
+        GetPage(
+          name: "/favoritePage",
+          page: () => const FavoritePage(),
+        ),
+        GetPage(
+          name: "/backGroundThemePage",
+          page: () => const BackGroundThemePage(),
         ),
       ],
     ),

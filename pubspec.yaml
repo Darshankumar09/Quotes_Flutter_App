@@ -40,6 +40,8 @@ dependencies:
   path:
   get_storage:
   share_plus:
+  image_gallery_saver:
+  path_provider:
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +71,9 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - lib/utils/resources/json/
+    - lib/resources/json/
+    - assets/images/category_icons/
+    - assets/images/category_images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
