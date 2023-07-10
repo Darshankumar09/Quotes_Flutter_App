@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:quotes_app/controllers/database_check_controller.dart';
 import 'package:quotes_app/controllers/json_controller.dart';
@@ -88,7 +87,7 @@ class DBHelper {
     await db!.rawUpdate(query, args);
   }
 
-  Future insertFavoriteQuotes({required QuotesDatabaseModel data}) async {
+  Future insertFavoriteQuotes({required FavoriteDataBaseModel data}) async {
     await initDB();
     await updateFavoriteQuote(
         isFavorite: 1,
@@ -103,7 +102,7 @@ class DBHelper {
       data.quoteCategory,
       data.quote,
       data.quoteAuthor,
-      Uint8List.fromList(categoryImage!.codeUnits),
+      Uint8List.fromList(data.quoteImage.codeUnits),
     ];
 
     await db!.rawInsert(query, args);

@@ -6,7 +6,6 @@ import 'package:quotes_app/models/quotes_database_model.dart';
 
 double height = Get.height;
 double width = Get.width;
-DateTime dt = DateTime.now();
 
 final getStorage = GetStorage();
 
@@ -18,9 +17,8 @@ String? categoryImage;
 
 late Future<List<QuotesDatabaseModel>> allQuotes;
 late Future<List<QuotesDatabaseModel>> quote;
-late Future<List<FavoriteDataBaseModel>> favoriteQuotes;
 
-String? backGroundImage;
+late Future<List<FavoriteDataBaseModel>> favoriteQuotes;
 
 List<String> backGroundImages = [
   "assets/images/category_images/1.png",

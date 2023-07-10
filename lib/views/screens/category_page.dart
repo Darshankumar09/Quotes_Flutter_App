@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:quotes_app/controllers/image_capture_controller.dart';
+import 'package:quotes_app/models/favorite_database_model.dart';
 import 'package:quotes_app/models/quotes_database_model.dart';
 import 'package:quotes_app/utils/globals.dart';
 import 'package:quotes_app/utils/helpers/dbHelper.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -15,12 +18,11 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   ImageCaptureController imageCaptureController =
-      Get.put(ImageCaptureController());
+      Get.find<ImageCaptureController>();
 
   @override
   void initState() {
     super.initState();
-
     allQuotes = DBHelper.dbHelper.fetchAllQuotes(categoryName: categoryName!);
   }
 
@@ -28,7 +30,12 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(categoryName!),
+        title: Text(
+          categoryName!,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(height * 0.016),
@@ -43,8 +50,12 @@ class _CategoryPageState extends State<CategoryPage> {
               List<QuotesDatabaseModel>? data = snapshot.data;
 
               if (data == null || data.isEmpty) {
-                return const Center(
-                  child: Text("No Data Available"),
+                return Center(
+                  child: Image.asset(
+                    "assets/images/other_images/no_data.png",
+                    height: height * 0.35,
+                    width: height * 0.35,
+                  ),
                 );
               } else {
                 List<GlobalKey> screenshotGlobalKey =
@@ -62,7 +73,8 @@ class _CategoryPageState extends State<CategoryPage> {
                               child: GestureDetector(
                                 onTap: () async {
                                   quoteId = data[index].quoteId;
-                                  backGroundImage = categoryImage;
+                                  imageCaptureController.backGroundImage(
+                                      bgImage: categoryImage!);
                                   Get.toNamed("/quoteDetailsPage");
                                 },
                                 child: Container(
@@ -134,7 +146,16 @@ class _CategoryPageState extends State<CategoryPage> {
                                         if (data[index].isFavorite == 0) {
                                           DBHelper.dbHelper
                                               .insertFavoriteQuotes(
-                                                  data: data[index]);
+                                            data: FavoriteDataBaseModel(
+                                              quoteId: data[index].quoteId,
+                                              quoteCategory:
+                                                  data[index].quoteCategory,
+                                              quote: data[index].quote,
+                                              quoteAuthor:
+                                                  data[index].quoteAuthor,
+                                              quoteImage: categoryImage!,
+                                            ),
+                                          );
 
                                           allQuotes = DBHelper.dbHelper
                                               .fetchAllQuotes(
@@ -219,6 +240,9 @@ class _CategoryPageState extends State<CategoryPage> {
                                           ClipboardData(
                                               text: data[index].quote),
                                         );
+                                        Fluttertoast.showToast(
+                                          msg: "Copied",
+                                        );
                                       },
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
@@ -241,10 +265,14 @@ class _CategoryPageState extends State<CategoryPage> {
                                     ),
                                     GestureDetector(
                                       onTap: () async {
-                                        await imageCaptureController.shareImage(
-                                            screenshotGlobalKey:
-                                                screenshotGlobalKey[index],
-                                            data: data[index]);
+                                        String filePath =
+                                            await imageCaptureController
+                                                .shareImage(
+                                                    screenshotGlobalKey:
+                                                        screenshotGlobalKey[
+                                                            index],
+                                                    data: data[index]);
+                                        Share.shareFiles([(filePath)]);
                                       },
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,

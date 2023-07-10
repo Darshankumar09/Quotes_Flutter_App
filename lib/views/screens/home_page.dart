@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:quotes_app/controllers/image_capture_controller.dart';
 import 'package:quotes_app/controllers/theme_controller.dart';
 import 'package:quotes_app/models/categories_database_model.dart';
 import 'package:quotes_app/utils/globals.dart';
@@ -15,7 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   GlobalKey<FormState> searchCategoryFormKey = GlobalKey<FormState>();
   TextEditingController searchCategoryController = TextEditingController();
-  ThemeController themeController = Get.put(ThemeController());
+  ImageCaptureController imageCaptureController =
+      Get.put(ImageCaptureController());
 
   @override
   void initState() {
@@ -39,11 +42,146 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Center(
                   child: CircleAvatar(
+                    foregroundImage: const AssetImage(
+                      "assets/images/category_images/32.png",
+                    ),
                     radius: height * 0.092,
                   ),
                 ),
                 SizedBox(
-                  height: height * 0.03,
+                  height: height * 0.04,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Row(
+                    children: [
+                      const Icon(Icons.home_outlined),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      Text(
+                        "Home Page",
+                        style: TextStyle(
+                          fontSize: height * 0.024,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.025,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Row(
+                    children: [
+                      const Icon(Icons.search),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      Text(
+                        "Search",
+                        style: TextStyle(
+                          fontSize: height * 0.024,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.025,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Row(
+                    children: [
+                      const Icon(Icons.grid_view),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      Text(
+                        "Browse",
+                        style: TextStyle(
+                          fontSize: height * 0.024,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.025,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed('/favoritePage');
+                  },
+                  child: Row(
+                    children: [
+                      const Icon(Icons.favorite_border),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      Text(
+                        "Favourite Page",
+                        style: TextStyle(
+                          fontSize: height * 0.024,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                const Divider(),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Row(
+                    children: [
+                      const Icon(Icons.person_outline),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      Text(
+                        "Profile",
+                        style: TextStyle(
+                          fontSize: height * 0.024,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Row(
+                    children: [
+                      const Icon(Icons.logout_outlined),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      Text(
+                        "Logout",
+                        style: TextStyle(
+                          fontSize: height * 0.024,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                const Divider(),
+                SizedBox(
+                  height: height * 0.02,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,41 +192,16 @@ class _HomePageState extends State<HomePage> {
                         fontSize: height * 0.024,
                       ),
                     ),
-                    GetBuilder<ThemeController>(builder: (_) {
-                      return Switch(
-                        value: themeController.themeModel.isDark,
-                        onChanged: (val) {
-                          themeController.changeTheme(val: val);
-                        },
-                      );
-                    }),
+                    Switch(
+                      value: Provider.of<ThemeController>(context)
+                          .themeModel
+                          .isDark,
+                      onChanged: (val) {
+                        Provider.of<ThemeController>(context, listen: false)
+                            .changeTheme(val: val);
+                      },
+                    ),
                   ],
-                ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed('/favoritePage');
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        size: height * 0.04,
-                      ),
-                      SizedBox(
-                        width: width * 0.03,
-                      ),
-                      Text(
-                        "Favourite Page",
-                        style: TextStyle(
-                          fontSize: height * 0.024,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),
@@ -148,12 +261,17 @@ class _HomePageState extends State<HomePage> {
                     } else if (snapshot.hasData) {
                       List<CategoryDatabaseModel>? data = snapshot.data;
                       if (data == null || data.isEmpty) {
-                        return const Center(
-                          child: Text("No Data Available"),
+                        return Center(
+                          child: Image.asset(
+                            "assets/images/other_images/no_data.png",
+                            height: height * 0.35,
+                            width: height * 0.35,
+                          ),
                         );
                       } else {
                         return Expanded(
                           child: GridView.builder(
+                            physics: const BouncingScrollPhysics(),
                             itemCount: data.length,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -212,8 +330,10 @@ class _HomePageState extends State<HomePage> {
                         );
                       }
                     }
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     );
                   },
                 ),
