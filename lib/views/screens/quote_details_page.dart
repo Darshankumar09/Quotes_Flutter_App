@@ -324,8 +324,7 @@ class _QuoteDetailsPageState extends State<QuoteDetailsPage> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            Get.offNamedUntil("/categoryPage",
-                                                (route) => false);
+                                            Get.back();
                                           },
                                           child: Text(
                                             "Cancel",
